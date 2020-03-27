@@ -70,70 +70,67 @@ def get_activedict(what):
             active[tp] = 'active'
         else:
             active[tp] = ''
-    print(active)
     return active
 
 @app.errorhandler(404)
 def notfound(error):
-    return flask.render_template('404.html', active=get_activedict('404'))
+    return flask.render_template('404.html', title='IMS - 존재하지 않는 페이지', active=get_activedict('404'))
 
 @app.route('/404')
 def rsp404():
-    return flask.render_template('404.html', active=get_activedict('404'))
+    return flask.render_template('404.html', title='IMS - 존재하지 않는 페이지', active=get_activedict('404'))
 
 @app.route('/blank')
 def blank():
-    return flask.render_template('blank.html', active=get_activedict('blank'))
+    return flask.render_template('blank.html', title='IMS - 빈 페이지', active=get_activedict('blank'))
 
 @app.route('/buttons')
-def button():
-    return flask.render_template('buttons.html', active=get_activedict('buttons'))
+def buttons():
+    return flask.render_template('buttons.html', title='IMS - 버튼', active=get_activedict('buttons'))
 
 @app.route('/cards')
 def cards():
-    return flask.render_template('cards.html', active=get_activedict('cards'))
+    return flask.render_template('cards.html', title='IMS - 카드', active=get_activedict('cards'))
 
 @app.route('/charts')
 def charts():
-    return flask.render_template('charts.html', active=get_activedict('charts'))
+    return flask.render_template('charts.html', title='IMS - 차트', active=get_activedict('charts'))
 
 @app.route('/forgot-password')
 def forgot_password():
-    return flask.render_template('forgot-password.html', active=get_activedict('forgot-password'))
+    return flask.render_template('forgot-password.html', title='IMS - 비밀번호 변경', active=get_activedict('forgot-password'))
 
 @app.route('/')
 def index():
-    return flask.render_template('index.html', active=get_activedict('index'))
+    return flask.render_template('index.html', title='IMS - 대시보드', active=get_activedict('index'))
 
 @app.route('/login')
 def login():
-    return flask.render_template('login.html', active=get_activedict('login'))
+    return flask.render_template('login.html', title='IMS - 로그인', active=get_activedict('login'))
 
 @app.route('/register')
 def register():
-    return flask.render_template('register.html', active=get_activedict('register'))
+    return flask.render_template('register.html', title='IMS - 회원가입', active=get_activedict('register'))
 
 @app.route('/tables')
 def tables():
-    return flask.render_template('tables.html', active=get_activedict('tables'))
+    return flask.render_template('tables.html', title='IMS - 테이블', active=get_activedict('tables'))
 
 @app.route('/utilities-animation')
 def utilities_animation():
-    return flask.render_template('utilities-animation.html', active=get_activedict('utilities-animation'))
+    return flask.render_template('utilities-animation.html', title='IMS - 애니메이션', active=get_activedict('utilities-animation'))
 
 @app.route('/utilities-border')
 def utilities_border():
-    return flask.render_template('utilities-border.html', active=get_activedict('utilities-border'))
+    return flask.render_template('utilities-border.html', title='IMS - 보더', active=get_activedict('utilities-border'))
 
 @app.route('/utilities-color')
 def utilities_color():
-    return flask.render_template('utilities-color.html', active=get_activedict('utilities-color'))
+    return flask.render_template('utilities-color.html', title='IMS - 컬러', active=get_activedict('utilities-color'))
 
 @app.route('/utilities-other')
 def utilities_other():
-    return flask.render_template('utilities-other.html', active=get_activedict('utilities-other'))
-
-
+    return flask.render_template('utilities-other.html', title='IMS - 기타', active=get_activedict('utilities-other'))
 
 def bot():
     client.run(token)

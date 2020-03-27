@@ -3953,7 +3953,6 @@ input[type="button"].btn-block {
 }
 
 .navbar {
-  position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -9581,6 +9580,7 @@ a:focus {
 .container-fluid {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
+  padding-bottom: 70px;
 }
 
 .scroll-to-top {
