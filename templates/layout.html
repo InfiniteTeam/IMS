@@ -15,6 +15,7 @@
   <!-- Custom fonts for this template-->
   <link href="static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css">
 
   <!-- Custom styles for this template-->
   <link href="static/css/sb-admin-2.css" rel="stylesheet">
@@ -34,7 +35,9 @@
         <div class="sidebar-brand-icon">
           <img src="static/img/infinite.ico" width="40px" height="40px">
         </div>
-        <div class="sidebar-brand-text mx-3">I M S<br><sup>by InfiniteTEAM</sup></div>
+        <div class="sidebar-brand-text mx-3">IMS<br><sup>INFINITETEAM
+
+        </sup></div>
       </a>
 
       <!-- Divider -->
@@ -44,7 +47,7 @@
       <li class="nav-item {{ active['index'] }}">
         <a class="nav-link" href="/">
           <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>대시보드</span></a>
+          <span>서비스 상태</span></a>
       </li>
 
       <!-- Divider -->
@@ -52,20 +55,20 @@
 
       <!-- Heading -->
       <div class="sidebar-heading">
-        Interface
+        인터페이스
       </div>
 
       <!-- Nav Item - Pages Collapse Menu -->
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
           <i class="fas fa-fw fa-cog"></i>
-          <span>Components</span>
+          <span>컴포넌트</span>
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Custom Components:</h6>
-            <a class="collapse-item {{ active['buttons'] }}" href="buttons">Buttons</a>
-            <a class="collapse-item {{ active['cards'] }}" href="cards">Cards</a>
+            <h6 class="collapse-header">커스텀 컴포넌트:</h6>
+            <a class="collapse-item {{ active['buttons'] }}" href="buttons">버튼</a>
+            <a class="collapse-item {{ active['cards'] }}" href="cards">카드</a>
           </div>
         </div>
       </li>
@@ -74,15 +77,15 @@
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
           <i class="fas fa-fw fa-wrench"></i>
-          <span>Utilities</span>
+          <span>유틸리티</span>
         </a>
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Custom Utilities:</h6>
-            <a class="collapse-item {{ active['utilities-color'] }}" href="utilities-color">Colors</a>
-            <a class="collapse-item {{ active['utilities-border'] }}" href="utilities-border">Borders</a>
-            <a class="collapse-item {{ active['utilities-animation'] }}" href="utilities-animation">Animations</a>
-            <a class="collapse-item {{ active['utilities-other'] }}" href="utilities-other">Other</a>
+            <h6 class="collapse-header">커스텀 유틸리티:</h6>
+            <a class="collapse-item {{ active['utilities-color'] }}" href="utilities-color">컬러</a>
+            <a class="collapse-item {{ active['utilities-border'] }}" href="utilities-border">보더</a>
+            <a class="collapse-item {{ active['utilities-animation'] }}" href="utilities-animation">애니메이션</a>
+            <a class="collapse-item {{ active['utilities-other'] }}" href="utilities-other">기타</a>
           </div>
         </div>
       </li>
@@ -92,25 +95,25 @@
 
       <!-- Heading -->
       <div class="sidebar-heading">
-        Addons
+        애드온
       </div>
 
       <!-- Nav Item - Pages Collapse Menu -->
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
           <i class="fas fa-fw fa-folder"></i>
-          <span>Pages</span>
+          <span>페이지</span>
         </a>
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Login Screens:</h6>
-            <a class="collapse-item {{ active['login'] }}" href="login">Login</a>
-            <a class="collapse-item {{ active['register'] }} " href="register">Register</a>
-            <a class="collapse-item {{ active['forgot-password'] }}" href="forgot-password">Forgot Password</a>
+            <h6 class="collapse-header">로그인 화면:</h6>
+            <a class="collapse-item {{ active['login'] }}" href="login">로그인</a>
+            <a class="collapse-item {{ active['register'] }} " href="register">회원가입</a>
+            <a class="collapse-item {{ active['forgot-password'] }}" href="forgot-password">비밀번호 찾기</a>
             <div class="collapse-divider"></div>
-            <h6 class="collapse-header">Other Pages:</h6>
-            <a class="collapse-item {{ active['404'] }}" href="404">404 Page</a>
-            <a class="collapse-item {{ active['blank'] }}" href="blank">Blank Page</a>
+            <h6 class="collapse-header">다른 페이지:</h6>
+            <a class="collapse-item {{ active['404'] }}" href="404">404 페이지</a>
+            <a class="collapse-item {{ active['blank'] }}" href="blank">빈 페이지</a>
           </div>
         </div>
       </li>
@@ -119,14 +122,14 @@
       <li class="nav-item">
         <a class="nav-link" href="charts">
           <i class="fas fa-fw fa-chart-area"></i>
-          <span>Charts</span></a>
+          <span>차트</span></a>
       </li>
 
       <!-- Nav Item - Tables -->
       <li class="nav-item">
         <a class="nav-link" href="tables">
           <i class="fas fa-fw fa-table"></i>
-          <span>Tables</span></a>
+          <span>테이블</span></a>
       </li>
 
       <!-- Divider -->

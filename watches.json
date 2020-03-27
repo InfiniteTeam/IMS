@@ -1,0 +1,17 @@
+{
+    "salmonbot": {
+        "id": 676629459599622167,
+        "nameko": "연어봇",
+        "nameen": "SalmonBot"
+    },
+    "uogb": {
+        "id": 627100915517751307,
+        "nameko": "UOGB봇",
+        "nameen": "Untitled Online Game Bot"
+    },
+    "xenobot": {
+        "id": 682801427260768313,
+        "nameko": "제노봇",
+        "nameen": "XenoBot"
+    }
+}

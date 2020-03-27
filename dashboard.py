@@ -11,10 +11,8 @@ import sys
 with open('config.json', encoding='utf-8') as config_file:
     config = json.load(config_file)
 
-with open('watches.txt', encoding='utf-8') as watches_file:
-    watches = watches_file.read().splitlines()
-for ind in range(len(watches)):
-    watches[ind] = int(watches[ind])
+with open('watches.json', encoding='utf-8') as watches_file:
+    watches = json.load(watches_file)
 
 if platform.system() == 'Windows':
     with open('C:/ims/' + config['tokenFileName'], encoding='utf-8') as token_file:
@@ -24,7 +22,9 @@ elif platform.system() == 'Linux':
         token = token_file.readline()
 
 client = discord.Client(status=discord.Status.online, activity=discord.Game('정상 동작중'))
-status = {discord.Status.online: [], discord.Status.idle: [], discord.Status.dnd: [], discord.Status.offline: []}
+status = {}
+for one in watches:
+    status[one] = {'status': None, 'statname': '정보를 불러오는 중...', 'statdesc': '','colorname': 'secondary'}
 
 @client.event
 async def on_ready():
@@ -32,33 +32,29 @@ async def on_ready():
 
 @client.event
 async def on_member_update(before, after):
-    return
-    global status
-    if after.id in watches:
-        if (not after.id in status[after.status]) and (after.status == discord.Status.online):
-            try:
-                status[before.status].remove(after.id)
-            except ValueError: pass
-            status[after.status].append(after.id)
-            await client.get_guild(config['noticeGuild']).get_channel(config['noticeChannel']).send(after.name + ' 이(가) 온라인입니다.')
-        if (not after.id in status[after.status]) and (after.status == discord.Status.online):
-            try:
-                status[before.status].remove(after.id)
-            except ValueError: pass
-            status[after.status].append(after.id)
-            await client.get_guild(config['noticeGuild']).get_channel(config['noticeChannel']).send(after.name + ' 이(가) 자리 비움 상태입니다.')
-        if (not after.id in status[after.status]) and (after.status == discord.Status.dnd):
-            try:
-                status[before.status].remove(after.id)
-            except ValueError: pass
-            status[after.status].append(after.id)
-            await client.get_guild(config['noticeGuild']).get_channel(config['noticeChannel']).send(after.name + ' 이(가) 방해 금지 상태입니다.')
-        if (not after.id in status[after.status]) and (after.status == discord.Status.offline):
-            try:
-                status[before.status].remove(after.id)
-            except ValueError: pass
-            status[after.status].append(after.id)
-            await client.get_guild(config['noticeGuild']).get_channel(config['noticeChannel']).send(after.name + ' 이(가) 오프라인입니다.')
+    global status 
+    if after.id == watches['salmonbot']['id']:
+        if after.status in [discord.Status.online, discord.Status.invisible]:
+            status['salmonbot']['status'] = 'online'
+            status['salmonbot']['statname'] = '정상 동작중'
+            status['salmonbot']['statdesc'] = '봇이 정상적으로 동작하고 있어요!'
+            status['salmonbot']['colorname'] = 'success'
+        if after.status == discord.Status.idle:
+            status['salmonbot']['status'] = 'idle'
+            status['salmonbot']['statname'] = '점검중'
+            status['salmonbot']['statdesc'] = '봇이 동작중이지만 점검중이에요.'
+            status['salmonbot']['colorname'] = 'warning'
+        if after.status == discord.Status.dnd:
+            status['salmonbot']['status'] = 'dnd'
+            status['salmonbot']['statname'] = '이용 불가(관리자 모드)'
+            status['salmonbot']['statdesc'] = '현재 관리자만 사용이 가능해요.'
+            status['salmonbot']['colorname'] = 'danger'
+        if after.status == discord.Status.offline:
+            status['salmonbot']['status'] = 'offline'
+            status['salmonbot']['statname'] = '오프라인'
+            status['salmonbot']['statdesc'] = '봇이 종료되어 오프라인 상태예요.'
+            status['salmonbot']['colorname'] = 'secondary'
+
 
 app = flask.Flask(__name__)
 title = 'IMS'
@@ -71,6 +67,15 @@ def get_activedict(what):
         else:
             active[tp] = ''
     return active
+
+@app.route('/')
+def index():
+    return flask.render_template(
+        'index.html',
+        title='IMS - 대시보드',
+        active=get_activedict('index'),
+        status=status
+        )
 
 @app.errorhandler(404)
 def notfound(error):
@@ -99,10 +104,6 @@ def charts():
 @app.route('/forgot-password')
 def forgot_password():
     return flask.render_template('forgot-password.html', title='IMS - 비밀번호 변경', active=get_activedict('forgot-password'))
-
-@app.route('/')
-def index():
-    return flask.render_template('index.html', title='IMS - 대시보드', active=get_activedict('index'))
 
 @app.route('/login')
 def login():
@@ -138,5 +139,5 @@ def bot():
 if __name__ == '__main__':
     task = threading.Thread(target=bot)
     task.start()
-    app.run()
+    app.run(host='0.0.0.0')
     

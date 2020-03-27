@@ -37,7 +37,7 @@
   --breakpoint-md: 768px;
   --breakpoint-lg: 992px;
   --breakpoint-xl: 1200px;
-  --font-family-sans-serif: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-family-sans-serif: "Nunito", "NanumSquare", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
@@ -60,7 +60,7 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
 
 body {
   margin: 0;
-  font-family: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: "Nunito", "NanumSquare", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
@@ -367,33 +367,39 @@ template {
 
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
+  
   margin-bottom: 0.5rem;
-  font-weight: 400;
   line-height: 1.2;
 }
 
 h1, .h1 {
+  font-weight: 900;
   font-size: 2.5rem;
 }
 
 h2, .h2 {
+  font-weight: 900;
   font-size: 2rem;
 }
 
 h3, .h3 {
+  font-weight: 900;
   font-size: 1.75rem;
 }
 
 h4, .h4 {
+  font-weight: 900;
   font-size: 1.5rem;
 }
 
 h5, .h5 {
-  font-size: 1.25rem;
+  font-weight: 900;
+  font-size: 1.05rem;
 }
 
 h6, .h6 {
-  font-size: 1rem;
+  font-weight: 600;
+  font-size: 0.9rem;
 }
 
 .lead {
@@ -5657,7 +5663,7 @@ a.close.disabled {
   z-index: 1070;
   display: block;
   margin: 0;
-  font-family: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: "Nunito", "NanumSquare", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-style: normal;
   font-weight: 400;
   line-height: 1.5;
@@ -5770,7 +5776,7 @@ a.close.disabled {
   z-index: 1060;
   display: block;
   max-width: 276px;
-  font-family: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: "Nunito", "NanumSquare", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-style: normal;
   font-weight: 400;
   line-height: 1.5;
@@ -7467,7 +7473,7 @@ button.bg-dark:focus {
 
 .mb-1,
 .my-1 {
-  margin-bottom: 0.25rem !important;
+  margin-bottom: 0.3rem !important;
 }
 
 .ml-1,
@@ -9346,7 +9352,7 @@ button.bg-dark:focus {
 }
 
 .font-weight-bold {
-  font-weight: 700 !important;
+  font-weight: 800 !important;
 }
 
 .font-weight-bolder {
@@ -9407,6 +9413,14 @@ a.text-warning:hover, a.text-warning:focus {
 
 a.text-danger:hover, a.text-danger:focus {
   color: #be2617 !important;
+}
+
+.text-salmon {
+  color: #ff8040 !important;
+}
+
+a.text-salmon:hover, a.text-salmon:focus {
+  color: #fd6f28 !important;
 }
 
 .text-light {
@@ -9755,7 +9769,7 @@ a:focus {
 }
 
 .text-xs {
-  font-size: .7rem;
+  font-size: 1.1rem;
 }
 
 .text-lg {
@@ -9849,6 +9863,10 @@ a:focus {
 
 .border-left-danger {
   border-left: 0.25rem solid #e74a3b !important;
+}
+
+.border-left-salmon {
+  border-left: 0.25rem solid #ff8040 !important;
 }
 
 .border-bottom-danger {
@@ -10133,8 +10151,8 @@ a:focus {
   white-space: nowrap;
   padding: .5rem 1.5rem;
   text-transform: uppercase;
-  font-weight: 800;
-  font-size: 0.65rem;
+  font-weight: 500;
+  font-size: 0.7rem;
   color: #b7b9cc;
 }
 
@@ -10227,7 +10245,7 @@ a:focus {
   text-align: center;
   padding: 0 1rem;
   font-weight: 800;
-  font-size: 0.65rem;
+  font-size: 0.7rem;
 }
 
 @media (min-width: 768px) {
@@ -10266,7 +10284,7 @@ a:focus {
     margin-right: 0.25rem;
   }
   .sidebar .nav-item .nav-link span {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     display: inline;
   }
   .sidebar .nav-item .nav-link[data-toggle="collapse"]::after {
