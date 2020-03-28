@@ -7,11 +7,16 @@
     "uogb": {
         "id": 627100915517751307,
         "nameko": "UOGB봇",
-        "nameen": "Untitled Online Game Bot"
+        "nameen": "Unnamed Online Game Bot"
     },
     "xenobot": {
         "id": 682801427260768313,
         "nameko": "제노봇",
         "nameen": "XenoBot"
+    },
+    "arpa": {
+        "id": 386715407697969173,
+        "nameko": "알파",
+        "nameen": "Arpa"
     }
 }

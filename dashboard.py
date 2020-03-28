@@ -22,42 +22,46 @@ elif platform.system() == 'Linux':
         token = token_file.readline()
 
 client = discord.Client(status=discord.Status.online, activity=discord.Game('정상 동작중'))
+
 status = {}
-for one in watches:
+for one in watches.keys():
     status[one] = {'status': None, 'statname': '정보를 불러오는 중...', 'statdesc': '','colorname': 'secondary'}
 
 @client.event
 async def on_ready():
+    global masterguild, masterchannel
     print('로그인:', client.user)
+    statuscheck.start()
+    masterguild = client.get_guild(config['masterGuild'])
+    masterchannel = masterguild.get_channel(config['masterChannel'])
 
-@client.event
-async def on_member_update(before, after):
-    global status 
-    if after.id == watches['salmonbot']['id']:
-        if after.status in [discord.Status.online, discord.Status.invisible]:
-            status['salmonbot']['status'] = 'online'
-            status['salmonbot']['statname'] = '정상 동작중'
-            status['salmonbot']['statdesc'] = '봇이 정상적으로 동작하고 있어요!'
-            status['salmonbot']['colorname'] = 'success'
-        if after.status == discord.Status.idle:
-            status['salmonbot']['status'] = 'idle'
-            status['salmonbot']['statname'] = '점검중'
-            status['salmonbot']['statdesc'] = '봇이 동작중이지만 점검중이에요.'
-            status['salmonbot']['colorname'] = 'warning'
-        if after.status == discord.Status.dnd:
-            status['salmonbot']['status'] = 'dnd'
-            status['salmonbot']['statname'] = '이용 불가(관리자 모드)'
-            status['salmonbot']['statdesc'] = '현재 관리자만 사용이 가능해요.'
-            status['salmonbot']['colorname'] = 'danger'
-        if after.status == discord.Status.offline:
-            status['salmonbot']['status'] = 'offline'
-            status['salmonbot']['statname'] = '오프라인'
-            status['salmonbot']['statdesc'] = '봇이 종료되어 오프라인 상태예요.'
-            status['salmonbot']['colorname'] = 'secondary'
-
+@tasks.loop(seconds=2)
+async def statuscheck():
+    global status
+    for onename in watches.keys():
+        bot = masterguild.get_member(watches[onename]['id'])
+        if bot.status in [discord.Status.online, discord.Status.invisible]:
+            status[onename]['status'] = 'online'
+            status[onename]['statname'] = '정상 동작중'
+            status[onename]['statdesc'] = '봇이 정상적으로 동작하고 있어요!'
+            status[onename]['colorname'] = 'success'
+        if bot.status == discord.Status.idle:
+            status[onename]['status'] = 'idle'
+            status[onename]['statname'] = '점검중'
+            status[onename]['statdesc'] = '봇이 동작중이지만 점검중이에요.'
+            status[onename]['colorname'] = 'warning'
+        if bot.status == discord.Status.dnd:
+            status[onename]['status'] = 'dnd'
+            status[onename]['statname'] = '이용 불가(관리자 모드)'
+            status[onename]['statdesc'] = '현재 관리자만 사용이 가능해요.'
+            status[onename]['colorname'] = 'danger'
+        if bot.status == discord.Status.offline:
+            status[onename]['status'] = 'offline'
+            status[onename]['statname'] = '오프라인'
+            status[onename]['statdesc'] = '봇이 종료되어 오프라인 상태예요.'
+            status[onename]['colorname'] = 'secondary'
 
 app = flask.Flask(__name__)
-title = 'IMS'
 
 def get_activedict(what):
     active = {}

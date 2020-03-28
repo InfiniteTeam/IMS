@@ -1,5 +1,5 @@
 {
 	"tokenFileName": "token.txt",
-	"noticeGuild": 582525945898860564,
-	"noticeChannel": 691937245753770015
+	"masterGuild": 582525945898860564,
+	"masterChannel": 691937245753770015
 }

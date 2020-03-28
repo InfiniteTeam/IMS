@@ -398,8 +398,8 @@ h5, .h5 {
 }
 
 h6, .h6 {
-  font-weight: 600;
-  font-size: 0.9rem;
+  font-weight: 500;
+  font-size: 0.95rem;
 }
 
 .lead {
@@ -9423,6 +9423,22 @@ a.text-salmon:hover, a.text-salmon:focus {
   color: #fd6f28 !important;
 }
 
+.text-xeno {
+  color: #9966FF !important;
+}
+
+a.text-xeno:hover, a.text-xeno:focus {
+  color: rgb(104, 40, 233)t;
+}
+
+.text-arpa {
+  color: #00d8ff !important;
+}
+
+a.text-arpa:hover, a.text-arpa:focus {
+  color: #00c6ed;
+}
+
 .text-light {
   color: #f8f9fc !important;
 }
@@ -9867,6 +9883,14 @@ a:focus {
 
 .border-left-salmon {
   border-left: 0.25rem solid #ff8040 !important;
+}
+
+.border-left-xeno {
+  border-left: 0.25rem solid #9966ff !important;
+}
+
+.border-left-arpa {
+  border-left: 0.25rem solid #00d8ff !important;
 }
 
 .border-bottom-danger {

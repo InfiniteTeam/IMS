@@ -31,60 +31,54 @@
         </div>
       </div>
 
-      <!-- Earnings (Monthly) Card Example -->
-      <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-success shadow h-100 py-2">
-          <div class="card-body">
-            <div class="row no-gutters align-items-center">
-              <div class="col mr-2">
-                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Earnings (Annual)</div>
-                <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
-              </div>
-              <div class="col-auto">
-                <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Earnings (Monthly) Card Example -->
-      <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-info shadow h-100 py-2">
-          <div class="card-body">
-            <div class="row no-gutters align-items-center">
-              <div class="col mr-2">
-                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks</div>
-                <div class="row no-gutters align-items-center">
-                  <div class="col-auto">
-                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
-                  </div>
-                  <div class="col">
-                    <div class="progress progress-sm mr-2">
-                      <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-auto">
-                <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Pending Requests Card Example -->
+      <!-- UOGB -->
       <div class="col-xl-3 col-md-6 mb-4">
         <div class="card border-left-warning shadow h-100 py-2">
           <div class="card-body">
             <div class="row no-gutters align-items-center">
               <div class="col mr-2">
-                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Pending Requests</div>
-                <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">UOGB <sup>Unnamed Online Game Bot</sup></div>
+                <div class="h5 mb-0 font-weight-bold text-{{ status['uogb']['colorname'] }} mb-1">{{ status['uogb']['statname'] }}</div>
+                <div class="h6 mb-0 text-gray-800">{{ status['uogb']['statdesc'] }}</div>
               </div>
               <div class="col-auto">
-                <i class="fas fa-comments fa-2x text-gray-300"></i>
+                <i class="fas fa-gamepad fa-2x text-warning"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- XenoBot -->
+      <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-xeno shadow h-100 py-2">
+          <div class="card-body">
+            <div class="row no-gutters align-items-center">
+              <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-xeno text-uppercase mb-1">제노봇 <sup>XenoBot</sup></div>
+                <div class="h5 mb-0 font-weight-bold text-{{ status['xenobot']['colorname'] }} mb-1">{{ status['xenobot']['statname'] }}</div>
+                <div class="h6 mb-0 text-gray-800">{{ status['xenobot']['statdesc'] }}</div>
+              </div>
+              <div class="col-auto">
+                <i class="fas fa-atom fa-2x text-xeno"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Arpa -->
+      <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-arpa shadow h-100 py-2">
+          <div class="card-body">
+            <div class="row no-gutters align-items-center">
+              <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-arpa text-uppercase mb-1">알파 <sup>Arpa</sup></div>
+                <div class="h5 mb-0 font-weight-bold text-{{ status['arpa']['colorname'] }} mb-1">{{ status['arpa']['statname'] }}</div>
+                <div class="h6 mb-0 text-gray-800">{{ status['arpa']['statdesc'] }}</div>
+              </div>
+              <div class="col-auto">
+                <i class="fas fa-user fa-2x text-arpa"></i>
               </div>
             </div>
           </div>
