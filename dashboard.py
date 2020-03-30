@@ -7,9 +7,16 @@ import platform
 import threading
 import time
 import sys
+import os
+import logging
+import logging.handlers
+import bcrypt
+import sqlite3
 
 with open('config.json', encoding='utf-8') as config_file:
     config = json.load(config_file)
+
+prefix = config['prefix']
 
 with open('watches.json', encoding='utf-8') as watches_file:
     watches = json.load(watches_file)
@@ -21,7 +28,26 @@ elif platform.system() == 'Linux':
     with open('/home/pi/ims/' + config['tokenFileName'], encoding='utf-8') as token_file:
         token = token_file.readline()
 
+
+# mkdir
+if not os.path.exists('./logs'):
+    os.makedirs('./logs')
+if not os.path.exists('./logs/general'):
+    os.makedirs('./logs/general')
+
+logger = logging.getLogger('ims')
+logger.setLevel(logging.DEBUG)
+log_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+log_streamh = logging.StreamHandler()
+log_streamh.setFormatter(log_formatter)
+logger.addHandler(log_streamh)
+log_fileh = logging.handlers.RotatingFileHandler('./logs/general/ims.log', maxBytes=config['maxlogbytes'], backupCount=10)
+log_fileh.setFormatter(log_formatter)
+logger.addHandler(log_fileh)
+
 client = discord.Client(status=discord.Status.online, activity=discord.Game('정상 동작중'))
+
+dataset = {}
 
 status = {}
 for one in watches.keys():
@@ -30,7 +56,7 @@ for one in watches.keys():
 @client.event
 async def on_ready():
     global masterguild, masterchannel
-    print('로그인:', client.user)
+    logger.info('로그인: {}'.format(client.user))
     statuscheck.start()
     masterguild = client.get_guild(config['masterGuild'])
     masterchannel = masterguild.get_channel(config['masterChannel'])
@@ -61,6 +87,15 @@ async def statuscheck():
             status[onename]['statdesc'] = '봇이 종료되어 오프라인 상태예요.'
             status[onename]['colorname'] = 'secondary'
 
+@client.event
+async def on_message(message):
+    if message.author.bot:
+        return
+    if message.content.startswith(prefix + 'ds'):
+        j = discord.utils.escape_markdown(str(json.dumps(dataset, indent=2)))
+        embed = discord.Embed(title='DATASETS', description=f'```json\n{j}\n```', color=0x4e73df)
+        await message.channel.send(embed=embed)
+
 app = flask.Flask(__name__)
 
 def get_activedict(what):
@@ -71,6 +106,27 @@ def get_activedict(what):
         else:
             active[tp] = ''
     return active
+
+@app.route('/ims/salmonbot/', methods=['POST'])
+def ims_salmonbot():
+    global dataset
+    if platform.system() == 'Windows':
+        with sqlite3.connect('C:/ims/' + config['dbFileName']) as cur:
+            user = cur.execute('select token from bots where name=:user', {'user':flask.request.headers['IMS-User']})
+    elif platform.system() == 'Linux':
+        with sqlite3.connect('/home/pi/ims/' + config['dbFileName']) as cur:
+            user = cur.execute('select token from bots where name=:user', {'user':flask.request.headers['IMS-User']})
+    
+    row = user.fetchone()
+
+    if row and bcrypt.checkpw(flask.request.headers['IMS-Token'].encode('utf-8'), row[0].encode('utf-8')):
+        sender = flask.request.headers['IMS-User']
+        logger.info(f'데이터셋을 받았습니다: 수신자: {sender}')
+        dataset[sender] = flask.request.json
+        return ''
+    else:
+        logger.info(f'인증에 실패했습니다: 수신자: {sender}')
+        return '', 401
 
 @app.route('/')
 def index():

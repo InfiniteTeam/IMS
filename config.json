@@ -1,5 +1,8 @@
 {
+	"prefix": ";ims ",
 	"tokenFileName": "token.txt",
 	"masterGuild": 582525945898860564,
-	"masterChannel": 691937245753770015
+	"masterChannel": 691937245753770015,
+	"maxlogbytes": 8388608,
+	"dbFileName": "auth.db"
 }
