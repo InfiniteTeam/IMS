@@ -12,6 +12,7 @@ import logging
 import logging.handlers
 import bcrypt
 import sqlite3
+import traceback
 
 with open('config.json', encoding='utf-8') as config_file:
     config = json.load(config_file)
@@ -20,6 +21,11 @@ prefix = config['prefix']
 
 with open('watches.json', encoding='utf-8') as watches_file:
     watches = json.load(watches_file)
+
+with open('masters.txt', encoding='utf-8') as masters_file:
+    masters = masters_file.read().splitlines()
+for m in range(len(masters)):
+    masters[m] = int(masters[m])
 
 if platform.system() == 'Windows':
     with open('C:/ims/' + config['tokenFileName'], encoding='utf-8') as token_file:
@@ -89,12 +95,30 @@ async def statuscheck():
 
 @client.event
 async def on_message(message):
-    if message.author.bot:
-        return
-    if message.content.startswith(prefix + 'ds'):
-        j = discord.utils.escape_markdown(str(json.dumps(dataset, indent=2)))
-        embed = discord.Embed(title='DATASETS', description=f'```json\n{j}\n```', color=0x4e73df)
-        await message.channel.send(embed=embed)
+    if message.content.startswith(prefix):
+        if message.author.id in masters:
+            if message.content.startswith(prefix + 'ds'):
+                j = discord.utils.escape_markdown(str(json.dumps(dataset, indent=2, sort_keys=True)))
+                embed = discord.Embed(title='📦 DATASETS', description=f'```json\n{j}\n```', color=0x4e73df)
+                await message.channel.send(embed=embed)
+        else:
+            miniembed = discord.Embed(title='⛔ YOU DO NOT HAVE PERMISSION.', color=0xff0000)
+            await message.channel.send(embed=miniembed)
+
+@client.event
+async def on_error(event, *args, **kwargs):
+    ignoreexc = [discord.http.NotFound]
+    excinfo = sys.exc_info()
+    errstr = f'{"".join(traceback.format_tb(excinfo[2]))}{excinfo[0].__name__}: {excinfo[1]}'
+    tb = traceback.format_tb(excinfo[2])
+    if not excinfo[0] in ignoreexc:
+        if 'Missing Permissions' in str(excinfo[1]):
+            miniembed = discord.Embed(title='⛔ MISSING PERMISSIONS', description=f'Insufficient privileges for the operation of this command.', color=color['error'])
+            await args[0].channel.send(embed=miniembed)
+        else:
+            await args[0].channel.send(embed=errormsg(errstr, args[0]))
+            if cur.execute('select * from userdata where id=%s and type=%s', (args[0].author.id, 'Master')) == 0:
+                errlogger.error(errstr + '\n=========================')
 
 app = flask.Flask(__name__)
 
@@ -107,20 +131,22 @@ def get_activedict(what):
             active[tp] = ''
     return active
 
-@app.route('/ims/salmonbot/', methods=['POST'])
+@app.route('/ims/dataset/', methods=['POST'])
 def ims_salmonbot():
     global dataset
+
+    sender = flask.request.headers['IMS-User']
+
     if platform.system() == 'Windows':
         with sqlite3.connect('C:/ims/' + config['dbFileName']) as cur:
-            user = cur.execute('select token from bots where name=:user', {'user':flask.request.headers['IMS-User']})
+            user = cur.execute('select token from bots where name=:user', {'user':sender})
     elif platform.system() == 'Linux':
         with sqlite3.connect('/home/pi/ims/' + config['dbFileName']) as cur:
-            user = cur.execute('select token from bots where name=:user', {'user':flask.request.headers['IMS-User']})
+            user = cur.execute('select token from bots where name=:user', {'user':sender})
     
     row = user.fetchone()
-
+    
     if row and bcrypt.checkpw(flask.request.headers['IMS-Token'].encode('utf-8'), row[0].encode('utf-8')):
-        sender = flask.request.headers['IMS-User']
         logger.info(f'데이터셋을 받았습니다: 수신자: {sender}')
         dataset[sender] = flask.request.json
         return ''
