@@ -235,15 +235,15 @@ def utilities_color():
 def utilities_other():
     return flask.render_template('utilities-other.html', title='IMS - 기타', active=get_activedict('utilities-other'))
 
-def bot():
-    client.run(token)
+def web():
+    app.run(host='0.0.0.0')
 
 def errormsg(error, msg):
     embed=discord.Embed(title='**❌ An error has occurred!**', description=f'Error Code: ```{error}```', color=color['error'], timestamp=datetime.datetime.utcnow())
     return embed
 
 if __name__ == '__main__':
-    task = threading.Thread(target=bot)
+    task = threading.Thread(target=web)
     task.start()
-    app.run(host='0.0.0.0')
+    client.run(token)
     
