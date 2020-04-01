@@ -36,33 +36,6 @@ elif platform.system() == 'Linux':
     with open('/home/pi/ims/' + config['tokenFileName'], encoding='utf-8') as token_file:
         token = token_file.readline()
 
-
-# mkdir
-if not os.path.exists('./logs'):
-    os.makedirs('./logs')
-if not os.path.exists('./logs/general'):
-    os.makedirs('./logs/general')
-
-logger = logging.getLogger('ims')
-logger.setLevel(logging.DEBUG)
-log_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-log_streamh = logging.StreamHandler()
-log_streamh.setFormatter(log_formatter)
-logger.addHandler(log_streamh)
-log_fileh = logging.handlers.RotatingFileHandler('./logs/general/ims.log', maxBytes=config['maxlogbytes'], backupCount=10)
-log_fileh.setFormatter(log_formatter)
-logger.addHandler(log_fileh)
-
-errlogger = logging.getLogger('error')
-errlogger.setLevel(logging.DEBUG)
-err_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-err_streamh = logging.StreamHandler()
-err_streamh.setFormatter(err_formatter)
-errlogger.addHandler(err_streamh)
-err_fileh = logging.handlers.RotatingFileHandler('./logs/general/error.log', maxBytes=config['maxlogbytes'], backupCount=10)
-err_fileh.setFormatter(err_formatter)
-errlogger.addHandler(err_fileh)
-
 client = discord.Client(status=discord.Status.online, activity=discord.Game('정상 동작중'))
 
 dataset = {}
@@ -74,7 +47,7 @@ for one in watches.keys():
 @client.event
 async def on_ready():
     global masterguild, masterchannel
-    logger.info('로그인: {}'.format(client.user))
+    print('로그인: {}'.format(client.user))
     statuscheck.start()
     masterguild = client.get_guild(config['masterGuild'])
     masterchannel = masterguild.get_channel(config['masterChannel'])
@@ -129,7 +102,7 @@ async def on_error(event, *args, **kwargs):
             await args[0].channel.send(embed=miniembed)
         else:
             await args[0].channel.send(embed=errormsg(errstr, args[0]))
-            errlogger.error(errstr + '\n=========================')
+            print(errstr + '\n=========================')
 
 app = flask.Flask(__name__)
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
@@ -159,11 +132,11 @@ def ims_dataset():
     row = user.fetchone()
     
     if row and bcrypt.checkpw(flask.request.headers['IMS-Token'].encode('utf-8'), row[0].encode('utf-8')):
-        logger.info(f'데이터셋을 받았습니다: 수신자: {sender}')
+        print(f'데이터셋을 받았습니다: 수신자: {sender}')
         dataset[sender] = flask.request.json
         return ''
     else:
-        logger.info(f'인증에 실패했습니다: 수신자: {sender}')
+        print(f'인증에 실패했습니다: 수신자: {sender}')
         return '', 401
 
 @app.route('/ims/dataset.json')
