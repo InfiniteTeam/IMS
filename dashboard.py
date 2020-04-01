@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import flask
 import discord
 from discord.ext import commands, tasks
@@ -50,6 +52,16 @@ logger.addHandler(log_streamh)
 log_fileh = logging.handlers.RotatingFileHandler('./logs/general/ims.log', maxBytes=config['maxlogbytes'], backupCount=10)
 log_fileh.setFormatter(log_formatter)
 logger.addHandler(log_fileh)
+
+errlogger = logging.getLogger('error')
+errlogger.setLevel(logging.DEBUG)
+err_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+err_streamh = logging.StreamHandler()
+err_streamh.setFormatter(err_formatter)
+errlogger.addHandler(err_streamh)
+err_fileh = logging.handlers.RotatingFileHandler('./logs/general/error.log', maxBytes=config['maxlogbytes'], backupCount=10)
+err_fileh.setFormatter(err_formatter)
+errlogger.addHandler(err_fileh)
 
 client = discord.Client(status=discord.Status.online, activity=discord.Game('정상 동작중'))
 
@@ -117,10 +129,10 @@ async def on_error(event, *args, **kwargs):
             await args[0].channel.send(embed=miniembed)
         else:
             await args[0].channel.send(embed=errormsg(errstr, args[0]))
-            if cur.execute('select * from userdata where id=%s and type=%s', (args[0].author.id, 'Master')) == 0:
-                errlogger.error(errstr + '\n=========================')
+            errlogger.error(errstr + '\n=========================')
 
 app = flask.Flask(__name__)
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
 def get_activedict(what):
     active = {}
@@ -131,8 +143,8 @@ def get_activedict(what):
             active[tp] = ''
     return active
 
-@app.route('/ims/dataset/', methods=['POST'])
-def ims_salmonbot():
+@app.route('/ims/dataset', methods=['POST'])
+def ims_dataset():
     global dataset
 
     sender = flask.request.headers['IMS-User']
@@ -153,6 +165,10 @@ def ims_salmonbot():
     else:
         logger.info(f'인증에 실패했습니다: 수신자: {sender}')
         return '', 401
+
+@app.route('/ims/dataset.json')
+def ims_dataset_json():
+    return dataset
 
 @app.route('/')
 def index():
@@ -221,6 +237,10 @@ def utilities_other():
 
 def bot():
     client.run(token)
+
+def errormsg(error, msg):
+    embed=discord.Embed(title='**❌ An error has occurred!**', description=f'Error Code: ```{error}```', color=color['error'], timestamp=datetime.datetime.utcnow())
+    return embed
 
 if __name__ == '__main__':
     task = threading.Thread(target=bot)
