@@ -33,7 +33,7 @@ if platform.system() == 'Windows':
     with open('C:/ims/' + config['tokenFileName'], encoding='utf-8') as token_file:
         token = token_file.readline()
 elif platform.system() == 'Linux':
-    with open('/home/pi/ims/' + config['tokenFileName'], encoding='utf-8') as token_file:
+    with open('/home/odroid/ims/' + config['tokenFileName'], encoding='utf-8') as token_file:
         token = token_file.readline()
 
 client = discord.Client(status=discord.Status.online, activity=discord.Game('정상 동작중'))
