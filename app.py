@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import flask
-import discord
-from discord.ext import commands, tasks
-import asyncio
 import json
 import platform
 import threading
@@ -19,90 +16,13 @@ import traceback
 with open('config.json', encoding='utf-8') as config_file:
     config = json.load(config_file)
 
-prefix = config['prefix']
-
 with open('watches.json', encoding='utf-8') as watches_file:
     watches = json.load(watches_file)
-
-with open('masters.txt', encoding='utf-8') as masters_file:
-    masters = masters_file.read().splitlines()
-for m in range(len(masters)):
-    masters[m] = int(masters[m])
-
-if platform.system() == 'Windows':
-    with open('C:/ims/' + config['tokenFileName'], encoding='utf-8') as token_file:
-        token = token_file.readline()
-elif platform.system() == 'Linux':
-    with open('/home/odroid/ims/' + config['tokenFileName'], encoding='utf-8') as token_file:
-        token = token_file.readline()
-
-client = discord.Client(status=discord.Status.online, activity=discord.Game('정상 동작중'))
-
-dataset = {}
 
 status = {}
 for one in watches.keys():
     status[one] = {'status': None, 'statname': '정보를 불러오는 중...', 'statdesc': '','colorname': 'secondary'}
-
-@client.event
-async def on_ready():
-    global masterguild, masterchannel
-    print('로그인: {}'.format(client.user))
-    statuscheck.start()
-    masterguild = client.get_guild(config['masterGuild'])
-    masterchannel = masterguild.get_channel(config['masterChannel'])
-
-@tasks.loop(seconds=2)
-async def statuscheck():
-    global status
-    for onename in watches.keys():
-        bot = masterguild.get_member(watches[onename]['id'])
-        if bot.status in [discord.Status.online, discord.Status.invisible]:
-            status[onename]['status'] = 'online'
-            status[onename]['statname'] = '정상 동작중'
-            status[onename]['statdesc'] = '봇이 정상적으로 동작하고 있어요!'
-            status[onename]['colorname'] = 'success'
-        if bot.status == discord.Status.idle:
-            status[onename]['status'] = 'idle'
-            status[onename]['statname'] = '점검중'
-            status[onename]['statdesc'] = '봇이 동작중이지만 점검중이에요.'
-            status[onename]['colorname'] = 'warning'
-        if bot.status == discord.Status.dnd:
-            status[onename]['status'] = 'dnd'
-            status[onename]['statname'] = '이용 불가(관리자 모드)'
-            status[onename]['statdesc'] = '현재 관리자만 사용이 가능해요.'
-            status[onename]['colorname'] = 'danger'
-        if bot.status == discord.Status.offline:
-            status[onename]['status'] = 'offline'
-            status[onename]['statname'] = '오프라인'
-            status[onename]['statdesc'] = '봇이 종료되어 오프라인 상태예요.'
-            status[onename]['colorname'] = 'secondary'
-
-@client.event
-async def on_message(message):
-    if message.content.startswith(prefix):
-        if message.author.id in masters:
-            if message.content.startswith(prefix + 'ds'):
-                j = discord.utils.escape_markdown(str(json.dumps(dataset, indent=2, sort_keys=True)))
-                embed = discord.Embed(title='📦 DATASETS', description=f'```json\n{j}\n```', color=0x4e73df)
-                await message.channel.send(embed=embed)
-        else:
-            miniembed = discord.Embed(title='⛔ YOU DO NOT HAVE PERMISSION.', color=0xff0000)
-            await message.channel.send(embed=miniembed)
-
-@client.event
-async def on_error(event, *args, **kwargs):
-    ignoreexc = [discord.http.NotFound]
-    excinfo = sys.exc_info()
-    errstr = f'{"".join(traceback.format_tb(excinfo[2]))}{excinfo[0].__name__}: {excinfo[1]}'
-    tb = traceback.format_tb(excinfo[2])
-    if not excinfo[0] in ignoreexc:
-        if 'Missing Permissions' in str(excinfo[1]):
-            miniembed = discord.Embed(title='⛔ MISSING PERMISSIONS', description=f'Insufficient privileges for the operation of this command.', color=color['error'])
-            await args[0].channel.send(embed=miniembed)
-        else:
-            await args[0].channel.send(embed=errormsg(errstr, args[0]))
-            print(errstr + '\n=========================')
+dataset = {}
 
 app = flask.Flask(__name__)
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
@@ -118,7 +38,7 @@ def get_activedict(what):
 
 @app.route('/ims/dataset', methods=['POST'])
 def ims_dataset():
-    global dataset
+    global dataset, status
 
     sender = flask.request.headers['IMS-User']
 
@@ -134,6 +54,8 @@ def ims_dataset():
     if row and bcrypt.checkpw(flask.request.headers['IMS-Token'].encode('utf-8'), row[0].encode('utf-8')):
         print(f'데이터셋을 받았습니다: 수신자: {sender}')
         dataset[sender] = flask.request.json
+        if sender == 'ims':
+            status = flask.request.json['bot-status']
         return ''
     else:
         print(f'인증에 실패했습니다: 수신자: {sender}')
@@ -208,15 +130,5 @@ def utilities_color():
 def utilities_other():
     return flask.render_template('utilities-other.html', title='IMS - 기타', active=get_activedict('utilities-other'))
 
-def web():
-    app.run(host='0.0.0.0')
-
-def errormsg(error, msg):
-    embed=discord.Embed(title='**❌ An error has occurred!**', description=f'Error Code: ```{error}```', color=color['error'], timestamp=datetime.datetime.utcnow())
-    return embed
-
 if __name__ == '__main__':
-    task = threading.Thread(target=web)
-    task.start()
-    client.run(token)
-    
+    app.run(host='0.0.0.0')
