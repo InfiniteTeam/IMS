@@ -14,6 +14,11 @@
         "nameko": "제노봇",
         "nameen": "XenoBot"
     },
+    "rtbot": {
+        "id": 661477460390707201,
+        "nameko": "알티봇",
+        "nameen": "RT Bot"
+    },
     "arpa": {
         "id": 386715407697969173,
         "nameko": "알파",

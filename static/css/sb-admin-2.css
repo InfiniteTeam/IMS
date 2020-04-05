@@ -9428,7 +9428,15 @@ a.text-salmon:hover, a.text-salmon:focus {
 }
 
 a.text-xeno:hover, a.text-xeno:focus {
-  color: rgb(104, 40, 233)t;
+  color: rgb(104, 40, 233)t !important;
+}
+
+.text-rtbot {
+  color: #00cccc !important;
+}
+
+a.text-rtbot:hover, a.text-rtbot:focus {
+  color: #03b8b8 !important;
 }
 
 .text-arpa {
@@ -9887,6 +9895,10 @@ a:focus {
 
 .border-left-xeno {
   border-left: 0.25rem solid #9966ff !important;
+}
+
+.border-left-rtbot {
+  border-left: 0.25rem solid #00cccc !important;
 }
 
 .border-left-arpa {

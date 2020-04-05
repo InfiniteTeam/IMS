@@ -26,6 +26,7 @@ dataset = {}
 
 app = flask.Flask(__name__)
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
+app.config['JSON_AS_ASCII'] = False
 
 def get_activedict(what):
     active = {}
@@ -38,7 +39,7 @@ def get_activedict(what):
 
 @app.route('/ims/dataset', methods=['POST'])
 def ims_dataset():
-    global dataset, status
+    global dataset, status, hidds
 
     sender = flask.request.headers['IMS-User']
 
@@ -46,7 +47,7 @@ def ims_dataset():
         with sqlite3.connect('C:/ims/' + config['dbFileName']) as cur:
             user = cur.execute('select token from bots where name=:user', {'user':sender})
     elif platform.system() == 'Linux':
-        with sqlite3.connect('/home/pi/ims/' + config['dbFileName']) as cur:
+        with sqlite3.connect('/home/odroid/ims/' + config['dbFileName']) as cur:
             user = cur.execute('select token from bots where name=:user', {'user':sender})
     
     row = user.fetchone()
@@ -56,7 +57,7 @@ def ims_dataset():
         dataset[sender] = flask.request.json
         if sender == 'ims':
             status = flask.request.json['bot-status']
-        return ''
+        return json.dumps(dataset, ensure_ascii=False)
     else:
         print(f'인증에 실패했습니다: 수신자: {sender}')
         return '', 401
