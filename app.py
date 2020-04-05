@@ -22,7 +22,7 @@ with open('watches.json', encoding='utf-8') as watches_file:
 status = {}
 for one in watches.keys():
     status[one] = {'status': None, 'statname': '정보를 불러오는 중...', 'statdesc': '','colorname': 'secondary'}
-dataset = {}
+dataset = {'public': {}, 'private': {}}
 
 app = flask.Flask(__name__)
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
@@ -54,9 +54,10 @@ def ims_dataset():
     
     if row and bcrypt.checkpw(flask.request.headers['IMS-Token'].encode('utf-8'), row[0].encode('utf-8')):
         print(f'데이터셋을 받았습니다: 수신자: {sender}')
-        dataset[sender] = flask.request.json
+        dataset['public'][sender] = flask.request.json['public']
+        dataset['private'][sender] = flask.request.json['public']
         if sender == 'ims':
-            status = flask.request.json['bot-status']
+            status = flask.request.json['public']['bot-status']
         return json.dumps(dataset, ensure_ascii=False)
     else:
         print(f'인증에 실패했습니다: 수신자: {sender}')
@@ -64,7 +65,7 @@ def ims_dataset():
 
 @app.route('/ims/dataset.json')
 def ims_dataset_json():
-    return dataset
+    return dataset['public']
 
 @app.route('/')
 def index():
