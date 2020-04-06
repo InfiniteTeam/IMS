@@ -55,7 +55,7 @@ def ims_dataset():
     if row and bcrypt.checkpw(flask.request.headers['IMS-Token'].encode('utf-8'), row[0].encode('utf-8')):
         print(f'데이터셋을 받았습니다: 수신자: {sender}')
         dataset['public'][sender] = flask.request.json['public']
-        dataset['private'][sender] = flask.request.json['public']
+        dataset['private'][sender] = flask.request.json['private']
         if sender == 'ims':
             status = flask.request.json['public']['bot-status']
         return json.dumps(dataset, ensure_ascii=False)
